@@ -1,13 +1,9 @@
 SP500 = read.csv("/Users/Larry/Documents/UIUC Schedule/FIN 580/HW/HW4.data.csv")
-
 SP500$loss = -SP500$Return
 
 #test = c(1,2, NA, 3,4,NA,5,6)
 #test1 = test[!is.na(test)] 
-
-
 loss <- SP500$loss[!is.na(SP500$loss)] # make sure "NA" is not output to loss
-
 #test2 =(loss)[loss>=0]
 #test3 = (loss)[loss>=0.05]
 
@@ -21,16 +17,13 @@ for (u in seq(0.01, 0.05, by = 0.002))
   meanexcess[i,1] = u
   meanexcess[i,2] = mean((loss-u)[loss>=u])  #特别赞的用法
 }
-
 matplot(meanexcess[,1], meanexcess[,2], type = "l", 
         xlab = "Threshold (u)", ylab = "Mean Excess Loss (e(u))", col = "black")
 #plot(meanexcess[,1], meanexcess[,2], type = "l", xlab = "Threshold (u)", ylab = "Mean Excess Loss (e(u))")
 
-
 #calculate number with loss higher than 0.022
 excess = (loss-0.022)[loss>=0.022]
 length(excess)
-
 # MLE for GPD
 # GPD fitting, theta[1]=kesai, theta[2]=beta
 initialvalue = c(0.1, 0.05)
@@ -51,15 +44,13 @@ plot(threshold_new,density, type = "l")
 #probability (need to check later)
 prob22=length(excess)/length(loss)
 
-
 condprob <- function(x){(1+kesai*x/beta)^(-1/kesai)}
-  
 series = seq(0.022 , 0.10, by = 0.001)
-
 valueofprob <- vector("numeric", length=79)
 
-for (j in 1: 79){
-valueofprob[j] = prob22*condprob(series[j]-0.022)
+for (j in 1: 79)
+{
+  valueofprob[j] = prob22*condprob(series[j]-0.022)
 }
 length(series)
 length(valueofprob)
