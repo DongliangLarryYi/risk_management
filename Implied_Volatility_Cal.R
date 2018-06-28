@@ -1,3 +1,5 @@
+# Calculate implied volatility from market prices and Black-Schole models
+# Use Newton-Raphson method to derive solution
 # Option Parameters
 t = 35 / 365 # Maturity
 r = 0.0025
