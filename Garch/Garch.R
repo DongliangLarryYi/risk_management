@@ -258,7 +258,6 @@ sum_pdf3a <- function(Return,theta)
   var1=theta[1];alpha=theta[2];beta=theta[3];long_var=theta[4];sita=theta[5]#sigma is long term variance
   var_fore=rep(0,1000)
   var_fore[1] = var1
-  
   for (i in 2:1000)
   {
     var_fore[i] = long_var*(1-alpha*(1+sita*sita)-beta)+alpha*(Return[i-1]-sita*sqrt(var_fore[i-1]))^2+beta*(var_fore[i-1])
@@ -266,41 +265,25 @@ sum_pdf3a <- function(Return,theta)
   sum = 0
   for (t in 1:1000)
   {sum = sum - 0.5*(log(var_fore[t]*2*pi)+Return[t]^2/var_fore[t])}
-  
   return (-sum)
 }
-
 #initial value matters!
-
 c(result1$par[1],result1$par[2],result1$par[3],result1$par[4],0)
-
 initialvalue3=c(9.614052e-05,0.09,0.8,9.614052e-05,0)
-
 result3_1 = optim(initialvalue3, fn=function(theta){sum_pdf3a(Return,theta)})
-
 sqrt(result3_1$par[1])
 result3_1$par[2]
 result3_1$par[3]
 sqrt(result3_1$par[4])
 result3_1$par[5]
-
 result3_1
-
 
 #b
 log_value=2*(result1$value[1]-result3_1$value[1])
-
 qchisq(.99, df=1)
-
-
-
-
 #Garch(2,2)
-
 mdl2 = garchFit(formula = ~ garch(2, 2), data = Return)
 summary(mdl2)
-
-
 sum_pdf_garch22 <- function(Return,theta)
 {
   if (sum(theta < 0) != 0 || theta[3] + theta[4]+theta[5] + theta[6] > 1) {
@@ -318,13 +301,9 @@ sum_pdf_garch22 <- function(Return,theta)
   sum = 0
   for (i in 1:1000)
   {sum = sum - 0.5*(log(var_fore[i]*2*pi)+Return[i]^2/var_fore[i])}
-  
   return (-sum)
 }
-
-
 initialvalue=c(9.614052e-05,9.614052e-05,0.06,0.15,0.000005,0.6,0.000001)
-
 result_garch22 = optim(initialvalue, fn=function(theta){sum_pdf_garch22(Return,theta)})
 result_garch22
 
