@@ -3,15 +3,12 @@ t = 35 / 365 # Maturity
 r = 0.0025
 sSPX = 1864.78
 sDJX = 159.74
-
 qSPX = 0.0222
 qDJX = 0.0248
 q = c(qSPX, qSPX, qDJX, qDJX) # Dividend Yields
-
 kSPX = 1865
 kDJX = 160
 K = c(kSPX, kSPX, kDJX, kDJX) # Strikes
-
 callSPX = (49.50 + 50.10) / 2
 putSPX = (55.50 + 56.10) / 2
 callDJX = (3.85 + 4.05) / 2
@@ -21,25 +18,24 @@ P = t(c(callSPX, putSPX, callDJX, putDJX)) # Prices
 P
 colnames(P) =  c("SPX.Call", "SPX.Put", "DJX.Call", "DJX.Put")
 
-# Black-Scholes Formulas
+# Black-Scholes Formulas - Call Option
 BSC = function(S, K, r, q, t, sigma) {
   d1 = (log(S / K) + (r - q) * t + sigma^2 * t / 2) / (sigma * sqrt(t))
   d2 = (log(S / K) + (r - q) * t - sigma^2 * t / 2) / (sigma * sqrt(t))
   result = exp(-q * t) * pnorm(d1) * S - exp(-r * t) * pnorm(d2) * K
-  
   return(result)
 }
+# Black-Scholes Formulas - Put Option
 BSP = function(S, K, r, q, t, sigma) {
   d1 = (log(S / K) + (r - q) * t + sigma^2 * t / 2) / (sigma * sqrt(t))
   d2 = (log(S / K) + (r - q) * t - sigma^2 * t / 2) / (sigma * sqrt(t))
   result = exp(-r * t) * pnorm(-d2) * K - exp(-q * t) * pnorm(-d1) * S 
-  
   return(result)
 }
+# Black-Scholes Formulas - Vega
 Vega = function(S, K, r, q, t, sigma) {
   d1 = (log(S / K) + (r - q) * t + sigma^2 * t / 2) / (sigma * sqrt(t))
   result = S * sqrt(t) * exp(-d1^2 / 2) / sqrt(2 * pi) #pdf
-  
   return(result)
 }
 
