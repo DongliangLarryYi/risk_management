@@ -13,9 +13,7 @@ loss1 = 10 * length(U1[U1<0.02])
 RV2 = rnorm(20)
 U2 = pnorm(RV2)
 loss2 = 20 * length(U2[U2<0.02])
-
 Total_Loss[i] = (loss1+loss2)/(10*80+20*20)
-
 #standard exponential
 RV1 = rnorm(80)
 U1 = pnorm(RV1)
@@ -27,22 +25,17 @@ U2 = pnorm(RV2)
 tao2 = -log(1-U2)/0.02;
 loss2 = 20 * length(tao2[tao2<1])
 Total_Loss_lambda[i] = (loss1+loss2)/(10*80+20*20)
-
 ###############
-
-
 }
 h = hist(Total_Loss,breaks = 40, plot= FALSE)
 h$counts=h$counts/sum(h$counts)
 plot(h, col = "gray")
-
 h_lambda = hist(Total_Loss_lambda,breaks = 40, plot= FALSE)
 h_lambda$counts=h_lambda$counts/sum(h_lambda$counts)
 plot(h_lambda, col = "gray")
 
 mean(Total_Loss)
 mean(Total_Loss_lambda)
-
 
 #1.2
 set.seed(1)
@@ -58,7 +51,6 @@ for (i in 1:Trials){
   
   loss1 = 10 * length(U1[U1<0.02])
   loss2 = 20 * length(U2[U2<0.02])
-  
   Total_Loss2[i] = (loss1+loss2)/(10*80+20*20)
 }
 h2 = hist(Total_Loss2,breaks = 200, plot= FALSE)
@@ -107,7 +99,6 @@ for (i in 1:Trials3){
     RV[1] = 1
   if (RV[1] <= 0.98)
     RV[1] = 0
-  
   if (RV[2] > 0.98)
     RV[2] = 1
   if (RV[2] <= 0.98)
@@ -140,18 +131,14 @@ for (i in 1:Trials){
   RV1 = rnorm(80)
   U1 = pnorm(RV1)
   loss1 = 10 * length(U1[U1<0.02])
-  
-  
   # loan: 20 Millions each
   RV2 = rnorm(20)
   U2 = pnorm(RV2)
   
   if(length(U2[U2<0.02]) >= 4)
     loss2 = 20* (length(U2[U2<0.02])-2)
-  
   if(length(U2[U2<0.02]) < 4 & length(U2[U2<0.02]) > 0)
     loss2 = 20 * (length(U2[U2<0.02]))/2
-  
   if(length(U2[U2<0.02]) == 0)
     loss2 = 0
   Total_Loss3[i] = (loss1+loss2)/(10*80+20*20)
@@ -178,17 +165,11 @@ for (i in 1:Trials){
   U = pnorm(RV)
   U1 = U[1:80]
   U2 = U[81:100]
-  
   loss1 = 10 * length(U1[U1<0.02])  
-  
-  
   if(length(U2[U2<0.02]) >= 4)
     loss2 = 20* (length(U2[U2<0.02])-2)
-  
   if(length(U2[U2<0.02]) < 4)
     loss2 = 20 * (length(U2[U2<0.02]))/2
-
-  
   Total_Loss4[i] = (loss1+loss2)/(10*80+20*20)
 }
 h4 = hist(Total_Loss4,breaks = 200, plot= FALSE)
@@ -205,37 +186,25 @@ set.seed(1)
 Total_Loss5 = rep(0,Trials)
 for (i in 1:Trials){
   # loan: 10 Millions each
-
   RV1 = rnorm(80)
   U1 = pnorm(RV1)
-  
   beta1 = rbeta(length(U1[U1<0.02]),2,2)
   loss_beta1 = 1-beta1
 #  loss_ration = sum(loss_beta)/length(U1[U1<0.02])
-
-  
   loss1 = 10 * sum(loss_beta1)
-  
   
   # loan: 20 Millions each
   RV2 = rnorm(20)
   U2 = pnorm(RV2)
-  
   if (length(U2[U2<0.02]) >0){
   beta2=rbeta(length(U2[U2<0.02]),2,2)
   loss_beta2 = 1-beta2}
-  
   if (length(U2[U2<0.02]) ==0)
     loss_beta2 = 0
-  
-    
-    
   if(sum(loss_beta2) >= 4)
     loss2 = 20* (sum(loss_beta2)-2)
-  
   if(sum(loss_beta2) < 4)
     loss2 = 20 * (sum(loss_beta2))/2
-  
   Total_Loss5[i] = (loss1+loss2)/(10*80+20*20)
 }
 h5 = hist(Total_Loss5,breaks = 40, plot= FALSE)
@@ -258,20 +227,15 @@ for (i in 1:Trials){
   loss_beta1 = 1-beta1
   loss1 = 10 * sum(loss_beta1)
   
-  
   if (length(U2[U2<0.02]) >0){
     beta2=rbeta(length(U2[U2<0.02]),2,2)
     loss_beta2 = 1-beta2}
-  
   if (length(U2[U2<0.02]) ==0)
     loss_beta2 = 0
-  
   if(sum(loss_beta2) >= 4)
     loss2 = 20* (sum(loss_beta2)-2)
-  
   if(sum(loss_beta2) < 4)
     loss2 = 20 * (sum(loss_beta2))/2
-  
   
   Total_Loss6[i] = (loss1+loss2)/(10*80+20*20)
 }
