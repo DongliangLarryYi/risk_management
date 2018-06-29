@@ -1,13 +1,11 @@
+# This code is related to the extreme value theory (EVT)
+# It builds a graph that shows the mean excess loss as a function of the threhold. 
+
 SP500 = read.csv("/Users/Larry/Documents/UIUC Schedule/FIN 580/HW/HW4.data.csv")
 SP500$loss = -SP500$Return
-
-#test = c(1,2, NA, 3,4,NA,5,6)
-#test1 = test[!is.na(test)] 
 loss <- SP500$loss[!is.na(SP500$loss)] # make sure "NA" is not output to loss
-#test2 =(loss)[loss>=0]
-#test3 = (loss)[loss>=0.05]
 
-# 1
+# For different threhold {0.01, 0.012, 0.014, …, 0.05}
 steps = (0.05-0.01)/0.002+1
 i = 0
 meanexcess = matrix(nrow = steps, ncol = 2)
@@ -15,15 +13,15 @@ for (u in seq(0.01, 0.05, by = 0.002))
 {
   i = i+1
   meanexcess[i,1] = u
-  meanexcess[i,2] = mean((loss-u)[loss>=u])  #特别赞的用法
+  meanexcess[i,2] = mean((loss-u)[loss>=u]) 
 }
 matplot(meanexcess[,1], meanexcess[,2], type = "l", 
         xlab = "Threshold (u)", ylab = "Mean Excess Loss (e(u))", col = "black")
-#plot(meanexcess[,1], meanexcess[,2], type = "l", xlab = "Threshold (u)", ylab = "Mean Excess Loss (e(u))")
 
 #calculate number with loss higher than 0.022
 excess = (loss-0.022)[loss>=0.022]
 length(excess)
+
 # MLE for GPD
 # GPD fitting, theta[1]=kesai, theta[2]=beta
 initialvalue = c(0.1, 0.05)
@@ -56,7 +54,7 @@ length(series)
 length(valueofprob)
 plot(series,valueofprob, type ="l")
 
-#var
+#Value at Risk
 VaR_EVT = 0.022+(beta/kesai)*((0.01/prob22)^(-kesai)-1)
 VaR_EVT
 prob22
