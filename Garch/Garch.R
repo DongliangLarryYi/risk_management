@@ -1,4 +1,5 @@
 # This code fit Garch and NGarch models with historical S&P returns
+# 1000 historical S&P price is used here
 
 library(fGarch)
 # import S&P 500 historical price
@@ -251,11 +252,10 @@ estimation2_D=estimation2_4(c(estimationD^2,result4$par[1],result4$par[2],longte
 estimation2_D
 sqrt(estimation2_D*252/24)
 
-#3
-#a
+#3a: fit the NGarch model. There are one more variable Theta to estimate
 sum_pdf3a <- function(Return,theta)
 {
-  var1=theta[1];alpha=theta[2];beta=theta[3];long_var=theta[4];sita=theta[5]#sigma is long term variance
+  var1=theta[1];alpha=theta[2];beta=theta[3];long_var=theta[4];sita=theta[5]
   var_fore=rep(0,1000)
   var_fore[1] = var1
   for (i in 2:1000)
@@ -278,7 +278,7 @@ sqrt(result3_1$par[4])
 result3_1$par[5]
 result3_1
 
-#b
+#3b: select model based on log likelihook calculation
 log_value=2*(result1$value[1]-result3_1$value[1])
 qchisq(.99, df=1)
 #Garch(2,2)
