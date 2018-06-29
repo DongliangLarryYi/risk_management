@@ -1,9 +1,23 @@
+# Use NGARCH(1,1) and DCC(1,1) models and Monte Carlo simulation to estimate the value of the securities.
+
+# Assignment. It is toward the end of the trading day on Tuesday, August 5, 2014. For
+# simplicity, assume that it is just after the close of trading, so that you know prices and interest
+# rates from the close of trading on August 5, 2014. Morgan Stanley, a major U.S. investment
+# bank, is selling an issue of Fixed Income Buffered Securities due August 10, 2015, with
+# Payments on the Securities Based on the Worst Performing of the iShares® Russell 2000® ETF
+# and the iShares® MSCI EAFE ETF. The buffered securities are debt instruments issued by
+# Morgan Stanley, but have cash flows based on the performance of the two ETFs. Your job is to
+# estimate the fair market value of the securities as of the trade date August 5, 2014.
+# http://www.sec.gov/Archives/edgar/data/895421/000095010314005563/dp48559_424b2-1554.htm
+
 Data = read.csv("/Users/Larry/Documents/R_Code/DCC/HW8.csv")
+# two underlying assets' historical return
 Return_IWM = log(Data$IWM.P[2:nrow(Data)] / Data$IWM.P[1:(nrow(Data)-1)])
 Return_EFA = log(Data$EFA.P[2:nrow(Data)] / Data$EFA.P[1:(nrow(Data)-1)])
 library(foreach)
 t = length(Return_IWM)
 
+# Build log likelihood function
 Loglikelihood <- function(Return, Theta)
 {
   if ( sum(Theta[1:4] <0) != 0 || Theta[1] * (1+Theta[5]^2) + Theta[2] > 1)
@@ -30,13 +44,12 @@ result_EFA
 Par_IWM = result_IWM$par
 Par_EFA = result_EFA$par
 
+# build DCC function
 DCCLN <- function(Return1, Return2, Theta){
   if (Theta[1]<=0 || Theta[2]<=0 || Theta[1]+Theta[2]>1)
   {return(10000)}
-  
   t = length(Return1)
   rho12_hist = mean(Return1*Return2)
-  
   Q11=rep(0,t)
   Q12=rep(0,t)
   Q22=rep(0,t)
@@ -44,12 +57,12 @@ DCCLN <- function(Return1, Return2, Theta){
   Q12[1]=rho12_hist
   Q22[1]=1
   
-  for (i in 2:t){
+  for (i in 2:t)
+  {
     Q11[i] = 1 + Theta[1] * (Return1[i-1]^2 - 1) + Theta[2] * (Q11[i-1] - 1)
     Q12[i] = rho12_hist + Theta[1] * (Return1[i-1] * Return2[i-1] - rho12_hist) + Theta[2] * (Q12[i-1] - rho12_hist)
     Q22[i] = 1 + Theta[1] * (Return2[i-1]^2-1)+ Theta[2] * (Q22[i-1]-1)
   }
-  
   rho12 = Q12/sqrt(Q11*Q22)
   temp = 1 - rho12^2
   LN = 0.5* sum(log(temp)+(Return1^2 + Return2^2 - 2 * rho12 * Return1*Return2) / temp)
@@ -135,7 +148,7 @@ MCs = foreach(i = 1:5000) %do%
     Estimate_IWM = IWM_ini * exp(sum(acumu_IWM))
     Estimate_EFA = EFA_ini * exp(sum(acumu_EFA))
     
-  #Butters
+  #Buffers
     Butter_IWM = (IWM_ini-Estimate_IWM)/IWM_ini
     Butter_EFA = (EFA_ini-Estimate_EFA)/EFA_ini
     Worst = max(Butter_EFA,Butter_IWM)
